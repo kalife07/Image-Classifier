@@ -11,3 +11,5 @@ venv/
 # Model checkpoints
 *.pt
 *.pth
+
+.vscode/
