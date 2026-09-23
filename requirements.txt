@@ -1,0 +1,9 @@
+# For GPU/CUDA support, install torch/torchvision from the PyTorch index instead, e.g.:
+#   pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu121
+torch==2.4.1
+torchvision==0.19.1
+timm==1.0.29
+pandas==2.2.2
+numpy==2.2.6
+matplotlib==3.7.2
+tqdm==4.66.4
