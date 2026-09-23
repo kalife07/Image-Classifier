@@ -70,6 +70,7 @@ model.to(device)
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0
+    #training loop
     for images, labels in tqdm(train_loader, desc="Training"):
         images, labels = images.to(device), labels.to(device)
         optimizer.zero_grad()
@@ -83,6 +84,7 @@ for epoch in range(num_epochs):
 
     model.eval()
     val_loss = 0.0
+    #validation loop
     with torch.no_grad():
         for inputs, labels in tqdm(validation_loader, desc="Validation"):
             inputs, labels = inputs.to(device), labels.to(device)
