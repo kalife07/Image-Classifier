@@ -1,0 +1,13 @@
+# Data — too large for git, keep it local
+dataset/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Model checkpoints
+*.pt
+*.pth
