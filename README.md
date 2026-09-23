@@ -14,6 +14,13 @@ A PyTorch image classifier that identifies playing cards from images using trans
 - Python 3.10
 - `torch`, `torchvision`, `timm`, `pandas`, `numpy`, `matplotlib`, `tqdm`
 
+## Dataset setup
+
+The `dataset/` folder is not committed to this repo (it's listed in `.gitignore`) because it's too large. Before running `model.py`, you need to download it yourself:
+
+1. Download the dataset from Kaggle: [Cards Image Dataset-Classification](https://www.kaggle.com/datasets/gpiosenka/cards-image-datasetclassification?resource=download)
+2. Unzip it and place it in a `dataset/` folder in the project root, matching the layout below.
+
 ## Data layout
 
 ```
