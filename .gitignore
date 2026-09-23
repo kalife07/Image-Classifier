@@ -15,3 +15,5 @@ venv/
 .env
 
 .vscode/
+
+tempCodeRunnerFile.py
