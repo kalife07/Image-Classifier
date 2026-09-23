@@ -12,4 +12,6 @@ venv/
 *.pt
 *.pth
 
+.env
+
 .vscode/
