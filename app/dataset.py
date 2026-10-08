@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 from torchvision.datasets import ImageFolder
 
 
-class PlayingCardDataset(Dataset):
+class HandwrittenDigitDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.data = ImageFolder(root=root_dir, transform=transform)
         self.transform = transform

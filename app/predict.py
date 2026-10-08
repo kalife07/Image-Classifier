@@ -4,7 +4,7 @@ import torch
 from PIL import Image
 import matplotlib.pyplot as plt #for visualization
 
-from classifier import SimpleCardClassifier, get_device, transform, CHECKPOINT_PATH
+from classifier import DigitClassifier, get_device, transform, CHECKPOINT_PATH
 
 
 def load_model(device):
@@ -12,7 +12,7 @@ def load_model(device):
     class_names = checkpoint["class_names"]
 
     #pretrained=False: our own trained weights replace the ImageNet ones anyway
-    model = SimpleCardClassifier(num_classes=len(class_names), pretrained=False)
+    model = DigitClassifier(num_classes=len(class_names), pretrained=False)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.to(device).eval()
     return model, class_names
@@ -51,7 +51,7 @@ def main():
         print(f'No trained model found at {CHECKPOINT_PATH}, run model.py first')
         sys.exit(1)
 
-    test_image = sys.argv[1] if len(sys.argv) > 1 else "dataset/test/five of spades/4.jpg"
+    test_image = sys.argv[1] if len(sys.argv) > 1 else "dataset/test/5/Five_full (10).jpg"
 
     device = get_device()
     model, class_names = load_model(device)

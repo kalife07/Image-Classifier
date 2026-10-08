@@ -1,5 +1,6 @@
 # Data — too large for git, keep it local
 dataset/
+dataset_old/
 
 # Python
 __pycache__/

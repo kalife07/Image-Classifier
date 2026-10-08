@@ -6,16 +6,17 @@ import torchvision.transforms as transforms
 import timm
 
 #trained weights are saved at the repo root, regardless of where scripts are run from
-CHECKPOINT_PATH = Path(__file__).resolve().parent.parent / "card_classifier.pth"
+CHECKPOINT_PATH = Path(__file__).resolve().parent.parent / "digit_classifier.pth"
 
 transform = transforms.Compose([
-    transforms.Resize((128, 128)),
+    #(height, width): keeps the ~3:2 portrait shape of the 90x140 digit images, and both are multiples of 32 for efficientnet
+    transforms.Resize((192, 128)),
     transforms.ToTensor()
 ])
 
 
-class SimpleCardClassifier(nn.Module):
-    def __init__(self, num_classes=53, pretrained=True):
+class DigitClassifier(nn.Module):
+    def __init__(self, num_classes=10, pretrained=True):
         super().__init__()
         self.base_model = timm.create_model('efficientnet_b0', pretrained=pretrained)
         self.features = nn.Sequential(*list(self.base_model.children())[:-1])

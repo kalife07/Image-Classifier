@@ -4,8 +4,8 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from dataset import PlayingCardDataset
-from classifier import SimpleCardClassifier, get_device, transform, CHECKPOINT_PATH
+from dataset import HandwrittenDigitDataset
+from classifier import DigitClassifier, get_device, transform, CHECKPOINT_PATH
 
 
 def train_model(model, train_loader, validation_loader, criterion, optimizer, num_epochs, device):
@@ -46,8 +46,8 @@ def main():
     train_folder = 'dataset/train'
     validation_folder = 'dataset/valid'
 
-    train_dataset = PlayingCardDataset(train_folder, transform=transform)
-    validation_dataset = PlayingCardDataset(validation_folder, transform=transform)
+    train_dataset = HandwrittenDigitDataset(train_folder, transform=transform)
+    validation_dataset = HandwrittenDigitDataset(validation_folder, transform=transform)
 
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     validation_loader = DataLoader(validation_dataset, batch_size=32, shuffle=False)
@@ -55,7 +55,7 @@ def main():
     device = get_device()
     print(f'Using device: {device}')
 
-    model = SimpleCardClassifier(num_classes=len(train_dataset.classes)).to(device)
+    model = DigitClassifier(num_classes=len(train_dataset.classes)).to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
