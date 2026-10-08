@@ -22,3 +22,5 @@ venv/
 tempCodeRunnerFile.py
 
 .DS_Store
+
+.claude
