@@ -19,10 +19,8 @@ RUN pip install -r requirements.txt \
 COPY app/ app/
 #trained weights, CHECKPOINT_PATH resolves to the project root
 COPY digit_classifier.pth .
-#test images only, so the default image in predict.py exists (train/valid are excluded in .dockerignore)
-COPY dataset/test/ dataset/test/
 #default test image for predict.py
-COPY add_tests/ add_tests/
+COPY sample_digit.jpg .
 
 #arguments passed to `docker run` are forwarded to predict.py, e.g. an image path
 ENTRYPOINT ["python", "app/predict.py"]

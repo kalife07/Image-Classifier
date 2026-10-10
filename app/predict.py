@@ -51,7 +51,7 @@ def main():
         print(f'No trained model found at {CHECKPOINT_PATH}, run model.py first')
         sys.exit(1)
 
-    test_image = sys.argv[1] if len(sys.argv) > 1 else "add_tests/test_digit6.jpg" #replace path with desired test path
+    test_image = sys.argv[1] if len(sys.argv) > 1 else "sample_digit.jpg" #replace path with desired test path
 
     device = get_device()
     model, class_names = load_model(device)
