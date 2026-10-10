@@ -51,13 +51,15 @@ def main():
         print(f'No trained model found at {CHECKPOINT_PATH}, run model.py first')
         sys.exit(1)
 
-    test_image = sys.argv[1] if len(sys.argv) > 1 else "dataset/test/5/Five_full (10).jpg" #replace path with desried test path
+    test_image = sys.argv[1] if len(sys.argv) > 1 else "add_tests/new_image2.jpg" #replace path with desired test path
 
     device = get_device()
     model, class_names = load_model(device)
 
     original_image, image_tensor = preprocess_image(test_image, transform)
     probabilities = predict(model, image_tensor, device)
+    best = probabilities.argmax()
+    print(f'Predicted class: {class_names[best]} with probability {probabilities[best]:.4f}')
     visualize_predictions(original_image, probabilities, class_names)
 
 

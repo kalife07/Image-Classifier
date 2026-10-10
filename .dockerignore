@@ -1,0 +1,18 @@
+.git
+.gitignore
+.vscode/
+.claude
+.DS_Store
+venv/
+.venv/
+.env
+**/__pycache__
+*.py[cod]
+
+#only the test split is needed for predictions
+dataset_old/
+dataset/train/
+dataset/valid/
+
+#old card classifier weights
+card_classifier.pth

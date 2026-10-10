@@ -12,6 +12,10 @@ venv/
 # Model checkpoints
 *.pt
 *.pth
+!digit_classifier.pth
+
+#extra_tests
+add_tests/
 
 #environment variables
 .env
