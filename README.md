@@ -27,7 +27,8 @@ Or, instead of the above, just [Docker](https://docs.docker.com/get-docker/), wh
 The `dataset/` folder is not committed to this repo (it's listed in `.gitignore`) because it's too large. You only need it if you want to retrain the model with `model.py` (see [Retrain the model](#optional-retrain-the-model)). To get it:
 
 1. Download the dataset from Kaggle: [Handwritten Digit](https://www.kaggle.com/datasets/panghalvishesh/handwritten-digit)
-2. Unzip it and place it in a `dataset/` folder in the project root, matching the layout below.
+2. Unzip it and place it in a `dataset/` folder in the project root.
+3. Split the images into `train/`, `valid/` and `test/` folders, preferably with a 70/15/15 split, keeping one subfolder per digit in each, as shown in [Data layout](#data-layout). The Kaggle download isn't split this way, and `dataset.py` expects these three folders. This step is only needed if you want to retrain the model.
 
 The split used here has about 22,000 training images and about 4,700 images each for validation and test, spread fairly evenly across the 10 digits.
 
