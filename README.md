@@ -8,12 +8,14 @@ A PyTorch image classifier that uses a convolutional neural network to recognize
 
 - **`app/dataset.py`** (`HandwrittenDigitDataset`): wraps `torchvision.datasets.ImageFolder` to load digit images from `dataset/train`, `dataset/valid`, and `dataset/test` directories, where each subfolder name is treated as a class label (one folder per digit, `0` to `9`).
 - **`app/classifier.py`**: code shared by training and prediction:
-  - **Preprocessing** (`transform`): resizes every image to 192x128 (height x width) and converts it to a tensor via `torchvision.transforms`. This keeps the roughly 3:2 portrait shape of the original 90x140 digit images, and both sides are multiples of 32, which suits EfficientNet.
+  - **Preprocessing** (`transform`): resizes every image to 192x128 (height x width), converts it to a tensor and normalizes it with the ImageNet mean/std the pretrained backbone expects, via `torchvision.transforms`. This keeps the roughly 3:2 portrait shape of the original 90x140 digit images, and both sides are multiples of 32, which suits EfficientNet. Used for validation and prediction.
+  - **Training augmentation** (`train_transform`): used only for training. On top of `transform`, it randomly shrinks, shifts and rotates the digit, places it on simulated paper (`RandomPaper`: grey tint, uneven lighting, texture, sometimes ruled lines), and varies brightness, contrast, colour and blur. This way the model also learns small, off-centre digits on non-white paper, like in phone photos, and not only the clean, frame-filling digits of the dataset.
+  - **Photo preprocessing** (`preprocess_photo`): used by `predict.py` before `transform`. Finds the ink in a photo, crops to the digit at the 90x140 training aspect ratio, and maps the paper to white and the ink to black. Images that are already tight crops (like the dataset images) are returned unchanged.
   - **Model** (`DigitClassifier`): a neural network built from a pretrained `efficientnet_b0` backbone (via `timm`, a convolutional neural network) with its classification head removed, followed by a single linear layer that maps the 1280-dimensional feature output to the number of digit classes (10 by default).
   - **Device selection** (`get_device`): uses an NVIDIA GPU (CUDA) if available, then Apple Silicon GPU (MPS), otherwise CPU.
   - **`CHECKPOINT_PATH`**: location of the saved model file, `digit_classifier.pth` in the project root.
-- **`app/model.py`** (training): trains the model for 5 epochs using the Adam optimizer and cross-entropy loss. After each epoch it evaluates on the validation set and prints the training/validation loss. When training finishes, it saves the learned weights and class names to `digit_classifier.pth`.
-- **`app/predict.py`** (testing): loads the saved weights from `digit_classifier.pth`, predicts the digit in a single image, and shows a matplotlib figure with the image next to the probability of each digit. It doesn't retrain.
+- **`app/model.py`** (training): trains the model for 5 epochs on augmented images (`train_transform`) using the Adam optimizer, cross-entropy loss and a cosine learning-rate schedule. After each epoch it evaluates on the unaugmented validation set, prints the training/validation loss and validation accuracy, and saves the learned weights and class names to `digit_classifier.pth` whenever the validation loss is the best so far.
+- **`app/predict.py`** (testing): loads the saved weights from `digit_classifier.pth`, preprocesses a single image (skip with `--raw`), predicts its digit, and shows a matplotlib figure with the original image, the model input and the probability of each digit. It doesn't retrain.
 
 ## Requirements
 
@@ -123,16 +125,22 @@ If any of these is missing, the container doesn't crash: `get_device()` falls ba
    python app/predict.py
    ```
 
-   This loads the saved weights from `digit_classifier.pth` without retraining and shows a matplotlib figure with the image next to the predicted probability of each digit. By default it uses `sample_digit.jpg` from the project root. To test a different image, pass its path:
+   This loads the saved weights from `digit_classifier.pth` without retraining and shows a matplotlib figure with the original image, the preprocessed image the model actually sees, and the predicted probability of each digit. By default it uses `sample_digit.jpg` from the project root. To test a different image, pass its path:
 
    ```
    python app/predict.py path/to/your_digit.jpg
    ```
 
-   To change the default image instead, edit the path in the `test_image` line of `main()` in `app/predict.py`:
+   Photos of a digit on paper (for example from a phone camera) are automatically cropped to the digit and have their background whitened before prediction, so they look like the training images (see `preprocess_photo` in `app/classifier.py`). Images that are already tight crops pass through unchanged. To skip this step, add `--raw`:
+
+   ```
+   python app/predict.py path/to/your_digit.jpg --raw
+   ```
+
+   To change the default image instead, edit the `default` of the `image` argument in `main()` in `app/predict.py`:
 
    ```python
-   test_image = sys.argv[1] if len(sys.argv) > 1 else "sample_digit.jpg"
+   parser.add_argument("image", nargs="?", default="sample_digit.jpg", help="path to the image")
    ```
 
    If you change it in the Docker setup too, make sure the new image is copied into the image (see the `COPY` lines in the `Dockerfile`) and rebuild it.
